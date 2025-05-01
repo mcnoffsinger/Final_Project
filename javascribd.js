@@ -1,4 +1,10 @@
 
+
+
+//MAXWELL NOFFSINGER
+
+//FINAL PROJECT
+
 //setting up some variables
 const submit = document.getElementById("submit")
 const table = document.getElementById("taskManager")
@@ -24,30 +30,44 @@ class Task{
     this.importance = importance
     this.date = date
     this.done = done
-    this.delID = delID
+    this.delID = delID//this is used to add event listeners that correspond to the right task
     
     }
 
 }
 
 
-
+//function to add a new task, contains the function that refreshes the tasks (Draw())
 function addTask(){
 
     //add new rows
+    
+
+   
     let name = document.getElementById("input").value
+
+
+    if(name == ""){name= "Name not specified"}//You asked for this in the rubric
     let priority = document.getElementById("priority").value
+
+
     let important = document.getElementById("important").checked
     
     
-
+    //creates the new task
     TaskList.push(new Task(name, priority,important, Date().slice(0,10),"ID"+ String(TaskCounter),false))
+
+    //sorts by priority
     TaskList.sort((a,b)=>(b.priority-a.priority))
+
+    //ensures each task gets a unique ID
     TaskCounter += 1
     
 
-
+    //draws the new tasks onto the DOM, calls itself in the case of event listeners.
     function Draw(){
+
+        //fisrt console.log the JSON objects
         console.log("Someone manipulated the tasks")
         for (task of TaskList){
             
@@ -55,25 +75,28 @@ function addTask(){
 
         }
 
-        //clear current rows
+        //clear current rows. Very elegant solution I know.
         table.innerHTML = ""
 
 
 
         
 
-        //redraw all of the rows
+        //redraw all of the rows. Super efficient I know.
         
 
         for (task of TaskList){
+            //they are not done by default
             let taskIsDone = false
-            let newRow = document.createElement("tr")
+            let newRow = document.createElement("tr")//one task
         
-
+            //the name
             let nameData = document.createElement("td")
             nameData.append("Task Name:"+ task.name)
             newRow.appendChild(nameData)
-        
+
+
+            //the priority
             let priorityData = document.createElement("td")
             switch(task.priority){
                 case "1":priorityData.append("Task Priority: Low     ");break;
@@ -82,10 +105,16 @@ function addTask(){
             }
             newRow.appendChild(priorityData)
 
+
+            //the date
             let datedata = document.createElement("td")
             datedata.innerHTML = "Date added: "+ task.date;
             newRow.appendChild(datedata)
 
+
+
+
+            //Whether the task is done or not
             let deletedata = document.createElement("td")
             deletedata.append("Done?")
             
@@ -95,11 +124,9 @@ function addTask(){
             checkboxdata.setAttribute("id",task.delID)
             
             if (task.done == true){
-                checkboxdata.setAttribute("checked","true")
+                checkboxdata.setAttribute("checked","true")//this works without the else for some reason
                 taskIsDone = true
 
-            }else{
-                checkboxdata.setAttribute("checked","false")
             }
 
 
@@ -112,9 +139,7 @@ function addTask(){
                         subtask.done = true
                         }else{
                             subtask.done = false
-
-
-                    }
+                        }
                         
                     }
                     
@@ -130,7 +155,7 @@ function addTask(){
 
             newRow.appendChild(deletedata)
 
-
+            //The delete button
             let deletebutton = document.createElement("button")
             deletebutton.textContent = "Delete"
             deletebutton.setAttribute("id","Del" + task.delID)
@@ -152,37 +177,29 @@ function addTask(){
 
 
             })
+
             let actualdeletedata = document.createElement("td")
             actualdeletedata.appendChild(deletebutton)
 
             newRow.appendChild(actualdeletedata)
 
             
-
+            //formatting
             if (task.importance == true){
-                newRow.style.backgroundColor = "#689564"
+                newRow.style.backgroundColor = "red"
             }
 
             if (taskIsDone){
                 newRow.style.textDecoration = "line-through"
             }
 
-            
-
-        
-        
-        
-        
-        
-        
-        
-            table.appendChild(newRow)
+            table.appendChild(newRow)//adds newRow to the table in the div in the DOM
         }
         
             
 
         }
-    Draw()
+    Draw()//actually runs the function
     
 
 
